@@ -1,0 +1,24 @@
+{
+  "name": "pojo-generator",
+  "version": "1.0.0",
+  "description": "project to easily generate pojos from json",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creed30/pojo-generator.git"
+  },
+  "keywords": [
+    "pojo",
+    "java",
+    "json"
+  ],
+  "author": "Chad Reed",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/creed30/pojo-generator/issues"
+  },
+  "homepage": "https://github.com/creed30/pojo-generator#readme"
+}
