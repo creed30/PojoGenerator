@@ -1,11 +1,11 @@
 var fs = require('fs');
 var prependFile = require('prepend-file');
+var buffer = fs.readFileSync(process.argv[3]);
 
 var filename = process.argv[2];
 if (!filename.endsWith(".java")) {
     filename = filename + ".java"
 }
-var buffer = fs.readFileSync(process.argv[3]);
 
 var stringConstructor = "test".constructor;
 var arrayConstructor = [].constructor;
@@ -31,13 +31,19 @@ function createFunc(str, currfile) {
             addCustom(currfile, key)
             var fileName = capitalizeFirstLetter(key) + ".java";
             createClass(fileName);
-            createFunc(JSON.stringify(jsonObject[key]),fileName);
+            createFunc(JSON.stringify(jsonObject[key]), fileName);
         }
         if (whatIsIt(jsonObject[key]) === "String") {
             addString(currfile, key);
         }
         if (whatIsIt(jsonObject[key]) === "Array") {
-            addList(currfile,key,jsonObject[key][0]);
+            addList(currfile, key, jsonObject[key][0]);
+        }
+        if (whatIsIt(jsonObject[key]) === "Float") {
+            addFloat(currfile, key, jsonObject[key][0]);
+        }
+        if (whatIsIt(jsonObject[key]) === "Integer") {
+            addInt(currfile, key, jsonObject[key][0]);
         }
     });
 }
@@ -66,6 +72,20 @@ function addString(fileName, key) {
     });
 }
 
+function addInt(fileName, key) {
+    fs.appendFile(fileName, "private int " + lowerCaseFirstLetter(key) + "; ", (err) => {
+        if (err) throw err;
+        console.log('The "data to append" was appended to file!');
+    });
+}
+
+function addFloat(fileName, key) {
+    fs.appendFile(fileName, "private float " + lowerCaseFirstLetter(key) + "; ", (err) => {
+        if (err) throw err;
+        console.log('The "data to append" was appended to file!');
+    });
+}
+
 function addCustom(fileName, key) {
     fs.appendFile(fileName, "private " + capitalizeFirstLetter(key) + " " + lowerCaseFirstLetter(key) + "; ", (err) => {
         if (err) throw err;
@@ -73,7 +93,7 @@ function addCustom(fileName, key) {
     });
 }
 
-function addList(fileName,key,value) {
+function addList(fileName, key, value) {
     var listType = whatIsIt(value);
     if (listType !== "String") {
         listType = capitalizeFirstLetter(listType);
@@ -99,6 +119,11 @@ function whatIsIt(object) {
         return "String";
     } else if (object.constructor === arrayConstructor) {
         return "Array";
+    } else if (isInt(object)) {
+        return "Integer";
+    } else if (isFloat(object)) {
+        return "Float";
+
     } else if (object.constructor === objectConstructor) {
         return "Object";
     } else {
@@ -109,4 +134,13 @@ function whatIsIt(object) {
 String.prototype.endsWith = function(str) {
     var lastIndex = this.lastIndexOf(str);
     return (lastIndex !== -1) && (lastIndex + str.length === this.length);
+}
+
+function isInt(input) {
+    var RE = /[0-9 -()+]+$/;
+    return (RE.test(input));
+}
+function isFloat(input) {
+    var RE = /[-+]?([0-9]*.[0-9]+|[0-9]+)/;
+    return (RE.test(input));
 }

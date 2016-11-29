@@ -6,7 +6,8 @@
             "GlossList": {
                 "GlossEntry": {
                     "ID": "SGML",
-                    "SortAs": "SGML",
+                    "SortAsFloat": 2.0,
+                    "SortAsInt": 2,
                     "GlossTerm": "Standard Generalized Markup Language",
                     "Acronym": "SGML",
                     "Abbrev": "ISO 8879:1986",
@@ -25,7 +26,7 @@
     "title": "exampleglossary",
     "test": "exampleglossary",
     "GlossSeeAlso": [
-                            "GML",
-                            "XML"
-                        ]
+        "GML",
+        "XML"
+    ]
 }
