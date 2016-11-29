@@ -1,1 +1,1 @@
-public class Test.java { private String title; private String test; 
+import java.util.List; public class Test { private String title; private String test; private List<String> glossSeeAlso; 

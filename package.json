@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/creed30/pojo-generator/issues"
   },
-  "homepage": "https://github.com/creed30/pojo-generator#readme"
+  "homepage": "https://github.com/creed30/pojo-generator#readme",
+  "dependencies": {
+    "prepend-file": "^1.3.1"
+  }
 }

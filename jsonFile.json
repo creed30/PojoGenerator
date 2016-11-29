@@ -23,5 +23,9 @@
         }
     },
     "title": "exampleglossary",
-    "test": "exampleglossary"
+    "test": "exampleglossary",
+    "GlossSeeAlso": [
+                            "GML",
+                            "XML"
+                        ]
 }

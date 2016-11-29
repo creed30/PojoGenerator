@@ -1,6 +1,8 @@
 var fs = require('fs');
+var prependFile = require('prepend-file');
+
 var filename = process.argv[2];
-if(!filename.endsWith(".java")) {
+if (!filename.endsWith(".java")) {
     filename = filename + ".java"
 }
 var buffer = fs.readFileSync(process.argv[3]);
@@ -16,7 +18,7 @@ initFunc(str, filename);
 function initFunc(str, filename) {
     var test = capitalizeFirstLetter(filename);
     fs.closeSync(fs.openSync(test, 'w'));
-    fs.writeFile(test, "public class " + test + " { ", function (err) {
+    fs.writeFile(test, "public class " + test.slice(0, -5) + " { ", function (err) {
         if (err) {
             return console.log(err);
         }
@@ -50,15 +52,29 @@ function testFunc(str, currfile) {
             });
         }
         if (whatIsIt(jsonObject[key]) === "Array") {
-            fs.appendFile(currfile, key, (err) => {
+            var listType = whatIsIt(jsonObject[key][0]);
+            if (listType !== "String") {
+                listType = capitalizeFirstLetter(listType);
+            }
+            fs.appendFile(currfile, "private List<" + listType + "> " + lowerCaseFirstLetter(key) + "; ", (err) => {
                 if (err) throw err;
                 console.log('The "data to append" was appended to file!');
+            });
+            prependFile(currfile, 'import java.util.List; ', function (err) {
+                if (err) {
+                    console.log('The "data to prepend" was NOT prepended to file!');
+                }
+                console.log('The "data to prepend" was prepended to file!');
             });
         }
     });
 }
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function lowerCaseFirstLetter(string) {
+    return string.charAt(0).toLowerCase() + string.slice(1);
 }
 
 function whatIsIt(object) {
@@ -77,8 +93,7 @@ function whatIsIt(object) {
     }
 }
 
-String.prototype.endsWith = function(str)
-{
+String.prototype.endsWith = function (str) {
     var lastIndex = this.lastIndexOf(str);
     return (lastIndex !== -1) && (lastIndex + str.length === this.length);
 }
