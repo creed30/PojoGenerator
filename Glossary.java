@@ -1,1 +1,1 @@
-public class Glossary { 
+public class Glossary { private String title; private GlossDiv glossDiv; 

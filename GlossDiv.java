@@ -1,0 +1,1 @@
+public class GlossDiv { private String title; private GlossList glossList; 

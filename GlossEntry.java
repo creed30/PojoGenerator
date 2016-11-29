@@ -1,0 +1,1 @@
+public class GlossEntry { private String iD; private String sortAs; private String glossTerm; private String acronym; private String abbrev; private GlossDef glossDef; private String glossSee; 

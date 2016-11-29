@@ -1,0 +1,1 @@
+public class GlossList { private GlossEntry glossEntry; 

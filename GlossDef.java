@@ -1,0 +1,1 @@
+import java.util.List; public class GlossDef { private String para; private List<String> glossSeeAlso; 

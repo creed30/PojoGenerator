@@ -28,14 +28,16 @@ function createFunc(str, currfile) {
         console.log("value", jsonObject[key]);
         console.log("type", whatIsIt(jsonObject[key]));
         if (whatIsIt(jsonObject[key]) === "Object") {
+            addCustom(currfile, key)
             var fileName = capitalizeFirstLetter(key) + ".java";
             createClass(fileName);
+            createFunc(JSON.stringify(jsonObject[key]),fileName);
         }
         if (whatIsIt(jsonObject[key]) === "String") {
             addString(currfile, key);
         }
         if (whatIsIt(jsonObject[key]) === "Array") {
-            addList(currfile,key,jsonObject[key][0])
+            addList(currfile,key,jsonObject[key][0]);
         }
     });
 }
@@ -45,22 +47,6 @@ function capitalizeFirstLetter(string) {
 
 function lowerCaseFirstLetter(string) {
     return string.charAt(0).toLowerCase() + string.slice(1);
-}
-
-function whatIsIt(object) {
-    if (object === null) {
-        return "null";
-    } else if (object === undefined) {
-        return "undefined";
-    } else if (object.constructor === stringConstructor) {
-        return "String";
-    } else if (object.constructor === arrayConstructor) {
-        return "Array";
-    } else if (object.constructor === objectConstructor) {
-        return "Object";
-    } else {
-        return "don't know";
-    }
 }
 
 function createClass(fileName) {
@@ -74,7 +60,14 @@ function createClass(fileName) {
 }
 
 function addString(fileName, key) {
-    fs.appendFile(fileName, "private String " + key + "; ", (err) => {
+    fs.appendFile(fileName, "private String " + lowerCaseFirstLetter(key) + "; ", (err) => {
+        if (err) throw err;
+        console.log('The "data to append" was appended to file!');
+    });
+}
+
+function addCustom(fileName, key) {
+    fs.appendFile(fileName, "private " + capitalizeFirstLetter(key) + " " + lowerCaseFirstLetter(key) + "; ", (err) => {
         if (err) throw err;
         console.log('The "data to append" was appended to file!');
     });
@@ -95,6 +88,22 @@ function addList(fileName,key,value) {
         }
         console.log('The "data to prepend" was prepended to file!');
     });
+}
+
+function whatIsIt(object) {
+    if (object === null) {
+        return "null";
+    } else if (object === undefined) {
+        return "undefined";
+    } else if (object.constructor === stringConstructor) {
+        return "String";
+    } else if (object.constructor === arrayConstructor) {
+        return "Array";
+    } else if (object.constructor === objectConstructor) {
+        return "Object";
+    } else {
+        return "don't know";
+    }
 }
 
 String.prototype.endsWith = function(str) {
