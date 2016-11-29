@@ -14,58 +14,28 @@ var objectConstructor = {}.constructor;
 
 var str = buffer.toString();
 initFunc(str, filename);
-// var jsonObject = JSON.parse(str);
-function initFunc(str, filename) {
-    var test = capitalizeFirstLetter(filename);
-    fs.closeSync(fs.openSync(test, 'w'));
-    fs.writeFile(test, "public class " + test.slice(0, -5) + " { ", function (err) {
-        if (err) {
-            return console.log(err);
-        }
-        console.log("The file was saved!");
-    });
-    testFunc(str, filename);
+
+function initFunc(str, fileName) {
+    createClass(fileName);
+    createFunc(str, fileName);
 }
 
 
-function testFunc(str, currfile) {
+function createFunc(str, currfile) {
     var jsonObject = JSON.parse(str);
-    Object.keys(jsonObject).forEach(function (key) {
+    Object.keys(jsonObject).forEach(function(key) {
         console.log("key", key);
         console.log("value", jsonObject[key]);
-        // console.log(whatIsIt(k));
         console.log("type", whatIsIt(jsonObject[key]));
         if (whatIsIt(jsonObject[key]) === "Object") {
             var fileName = capitalizeFirstLetter(key) + ".java";
-            fs.closeSync(fs.openSync(fileName, 'w'));
-            fs.writeFile(fileName, "Hey there!", function (err) {
-                if (err) {
-                    return console.log(err);
-                }
-                console.log("The file was saved!");
-            });
+            createClass(fileName);
         }
         if (whatIsIt(jsonObject[key]) === "String") {
-            fs.appendFile(currfile, "private String " + key + "; ", (err) => {
-                if (err) throw err;
-                console.log('The "data to append" was appended to file!');
-            });
+            addString(currfile, key);
         }
         if (whatIsIt(jsonObject[key]) === "Array") {
-            var listType = whatIsIt(jsonObject[key][0]);
-            if (listType !== "String") {
-                listType = capitalizeFirstLetter(listType);
-            }
-            fs.appendFile(currfile, "private List<" + listType + "> " + lowerCaseFirstLetter(key) + "; ", (err) => {
-                if (err) throw err;
-                console.log('The "data to append" was appended to file!');
-            });
-            prependFile(currfile, 'import java.util.List; ', function (err) {
-                if (err) {
-                    console.log('The "data to prepend" was NOT prepended to file!');
-                }
-                console.log('The "data to prepend" was prepended to file!');
-            });
+            addList(currfile,key,jsonObject[key][0])
         }
     });
 }
@@ -93,7 +63,41 @@ function whatIsIt(object) {
     }
 }
 
-String.prototype.endsWith = function (str) {
+function createClass(fileName) {
+    var fileName = capitalizeFirstLetter(fileName);
+    fs.writeFile(fileName, "public class " + fileName.slice(0, -5) + " { ", function(err) {
+        if (err) {
+            return console.log(err);
+        }
+        console.log("The file was saved!");
+    });
+}
+
+function addString(fileName, key) {
+    fs.appendFile(fileName, "private String " + key + "; ", (err) => {
+        if (err) throw err;
+        console.log('The "data to append" was appended to file!');
+    });
+}
+
+function addList(fileName,key,value) {
+    var listType = whatIsIt(value);
+    if (listType !== "String") {
+        listType = capitalizeFirstLetter(listType);
+    }
+    fs.appendFile(fileName, "private List<" + listType + "> " + lowerCaseFirstLetter(key) + "; ", (err) => {
+        if (err) throw err;
+        console.log('The "data to append" was appended to file!');
+    });
+    prependFile(fileName, 'import java.util.List; ', function(err) {
+        if (err) {
+            console.log('The "data to prepend" was NOT prepended to file!');
+        }
+        console.log('The "data to prepend" was prepended to file!');
+    });
+}
+
+String.prototype.endsWith = function(str) {
     var lastIndex = this.lastIndexOf(str);
     return (lastIndex !== -1) && (lastIndex + str.length === this.length);
 }

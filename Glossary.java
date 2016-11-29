@@ -1,1 +1,1 @@
-Hey there!
+public class Glossary { 
